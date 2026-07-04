@@ -9,7 +9,6 @@ export default defineConfig({
       branch: 'main',
       authBaseUrl: 'https://sveltia-cms-auth.example.workers.dev',
       pagesFolder: 'pages',
-      mediaFolder: 'uploads',
     }),
   ],
 });
