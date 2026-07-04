@@ -1,8 +1,8 @@
 ---
-title: Home
-description: Welcome to Documental Starter
+title: Início
+description: Página inicial
 published: true
 blocks:
   - type: text
-    value: "<p>Welcome to your Documental site! This is the starter project for @documental-xyz/core.</p>"
+    value: "<h1>Bem-vindo</h1><p>Este é o seu site. Comece a editar o conteúdo pelo painel do CMS em <code>/admin</code> ou diretamente nos arquivos da pasta <code>pages/</code>.</p>"
 ---

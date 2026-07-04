@@ -1,8 +1,8 @@
 ---
-title: About
-description: About this starter
+title: Sobre
+description: Sobre este site
 published: true
 blocks:
   - type: text
-    value: "<h1>About Documental Starter</h1><p>This is a starter project for Documental. It consumes @documental-xyz/core via npm.</p>"
+    value: "<h1>Sobre</h1><p>Esta é a página 'Sobre'. Edite este texto para falar sobre o seu projeto.</p>"
 ---

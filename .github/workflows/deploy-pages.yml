@@ -1,0 +1,104 @@
+name: Deploy to GitHub Pages (Astro)
+
+on:
+  push:
+    branches: [main, preview]  # main → /<repo>/, preview → /<repo>/preview/
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  # Allow parallel per branch (main + preview simultaneously)
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  precheck_pages:
+    name: "Precheck: Is GitHub Pages enabled?"
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.chk.outputs.enabled }}
+    steps:
+      - name: "Query GitHub API for Pages status"
+        id: chk
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO:     ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if gh api "repos/$REPO/pages" >/dev/null 2>&1; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+            echo "GitHub Pages is enabled for $REPO"
+          else
+            echo "enabled=false" >> $GITHUB_OUTPUT
+            echo "::warning::GitHub Pages is NOT enabled for $REPO. Skipping build/deploy."
+          fi
+
+  build:
+    name: "Build Astro site"
+    needs: precheck_pages
+    if: ${{ needs.precheck_pages.outputs.enabled == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: "Install Dependencies"
+        run: npm install
+
+      - name: "Set BASE_PATH by branch"
+        id: bp
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "base_path=/${{ github.event.repository.name }}/" >> $GITHUB_OUTPUT
+            echo "is_preview=false" >> $GITHUB_OUTPUT
+          else
+            echo "base_path=/${{ github.event.repository.name }}/preview/" >> $GITHUB_OUTPUT
+            echo "is_preview=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: "Build (Astro)"
+        run: npm run build
+        env:
+          BASE_PATH: ${{ steps.bp.outputs.base_path }}
+          SITE: https://${{ github.repository_owner }}.github.io
+
+      - name: "Organize output for preview branch"
+        if: steps.bp.outputs.is_preview == 'true'
+        shell: bash
+        run: |
+          mkdir -p output_root/preview
+          cp -r dist/* output_root/preview/
+          rm -rf dist
+          mv output_root dist
+
+      - name: "Setup Pages"
+        uses: actions/configure-pages@v5
+
+      - name: "Upload artifact for Pages"
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    name: "Deploy to GitHub Pages"
+    needs: build
+    if: ${{ needs.precheck_pages.outputs.enabled == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: "Deploy"
+        id: deployment
+        uses: actions/deploy-pages@v4

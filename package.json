@@ -9,8 +9,9 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@documental-xyz/core": "file:../Documental",
+    "@documental-xyz/core": "^0.1.0",
     "astro": "^5.0.0",
+    "dotenv": "^16.4.5",
     "sass-embedded": "^1.86.3"
   }
 }

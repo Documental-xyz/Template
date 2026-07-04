@@ -2,7 +2,7 @@
 
 ### Crie seu site de geo-narrativas em minutos
 
-[![Use este template](https://img.shields.io/badge/Use%20este%20template-2ea44f?style=for-the-badge&logo=github)](https://github.com/documental-xyz/starter/generate)
+[![Use este template](https://img.shields.io/badge/Use%20este%20template-2ea44f?style=for-the-badge&logo=github)](https://github.com/YOUR_ORG/YOUR_REPO/generate)
 [![Deploy no GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white)](https://docs.github.com/pt/pages)
 
 ---
