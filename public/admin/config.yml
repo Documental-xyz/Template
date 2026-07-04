@@ -1752,7 +1752,7 @@ map: &map
 collections:
   - name: 'pages'
     label: 'Páginas'
-    folder: 'src/content/pages'
+    folder: 'pages'
     create: true
     editor:
       preview: false

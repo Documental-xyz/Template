@@ -8,6 +8,7 @@ export default defineConfig({
       repo: 'documental-xyz/starter',
       branch: 'main',
       authBaseUrl: 'https://sveltia-cms-auth.example.workers.dev',
+      pagesFolder: 'pages',
     }),
   ],
 });
