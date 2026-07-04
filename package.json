@@ -1,0 +1,16 @@
+{
+  "name": "documental-starter",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@documental-xyz/core": "file:../Documental",
+    "astro": "^5.0.0",
+    "sass-embedded": "^1.86.3"
+  }
+}
