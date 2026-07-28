@@ -1,8 +1,8 @@
-name: Deploy to GitHub Pages (Astro)
+name: Deploy to GitHub Pages (Combined)
 
 on:
   push:
-    branches: [main, preview]  # main → /<repo>/, preview → /<repo>/preview/
+    branches: [main, preview]
   workflow_dispatch:
 
 permissions:
@@ -11,8 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  # Allow parallel per branch (main + preview simultaneously)
-  group: pages-${{ github.ref }}
+  group: pages-combined
   cancel-in-progress: true
 
 jobs:
@@ -39,49 +38,63 @@ jobs:
           fi
 
   build:
-    name: "Build Astro site"
+    name: "Build (main + preview combined)"
     needs: precheck_pages
     if: ${{ needs.precheck_pages.outputs.enabled == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      # ─── Build MAIN ──────────────────────────────────
+      - name: "Checkout main branch"
         uses: actions/checkout@v4
+        with:
+          ref: main
+          path: ./repo-main
 
       - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: "Install Dependencies"
-        run: npm install
-
-      - name: "Set BASE_PATH by branch"
-        id: bp
-        shell: bash
+      - name: "Install dependencies + Build MAIN"
+        working-directory: ./repo-main
         run: |
-          if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            echo "base_path=/${{ github.event.repository.name }}/" >> $GITHUB_OUTPUT
-            echo "is_preview=false" >> $GITHUB_OUTPUT
-          else
-            echo "base_path=/${{ github.event.repository.name }}/preview/" >> $GITHUB_OUTPUT
-            echo "is_preview=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: "Build (Astro)"
-        run: npm run build
+          npm install
+          npm run build
         env:
-          BASE_PATH: ${{ steps.bp.outputs.base_path }}
+          BASE_PATH: /${{ github.event.repository.name }}/
           SITE: https://${{ github.repository_owner }}.github.io
 
-      - name: "Organize output for preview branch"
-        if: steps.bp.outputs.is_preview == 'true'
-        shell: bash
+      - name: "Copy MAIN to dist/ root"
         run: |
-          mkdir -p output_root/preview
-          cp -r dist/* output_root/preview/
-          rm -rf dist
-          mv output_root dist
+          mkdir -p dist
+          cp -r ./repo-main/dist/* dist/
 
+      # ─── Build PREVIEW ───────────────────────────────
+      - name: "Checkout preview branch"
+        id: checkout-preview
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: preview
+          path: ./repo-preview
+
+      - name: "Install dependencies + Build PREVIEW"
+        if: steps.checkout-preview.outcome == 'success'
+        working-directory: ./repo-preview
+        run: |
+          npm install
+          npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/preview/
+          SITE: https://${{ github.repository_owner }}.github.io
+
+      - name: "Copy PREVIEW to dist/preview/"
+        if: steps.checkout-preview.outcome == 'success'
+        run: |
+          mkdir -p dist/preview
+          cp -r ./repo-preview/dist/* dist/preview/
+
+      # ─── Upload combinado ────────────────────────────
       - name: "Setup Pages"
         uses: actions/configure-pages@v5
 
