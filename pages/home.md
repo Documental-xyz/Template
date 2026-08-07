@@ -15,8 +15,8 @@ pageSettings:
   seoKeywords: []
   seoImage: ''
 pageTheme:
-  primaryColor: '#050505'
-  secondaryColor: '#c27d05'
+  primaryColor: '#f5f5f5'
+  secondaryColor: '#3c8bc8'
   highlightColor: '#f2e3e3'
   auxiliaryColor: '#ffb514'
   displayFont: ''
@@ -74,7 +74,7 @@ components:
               mobile: ''
             - type: Button
               link:
-                url: https://documental.yxz/docs
+                url: https://documental.xyz/docs
                 target: _blank
                 text: Guia de Instalação & Uso
               icon: ''
