@@ -7,9 +7,9 @@
 
 ---
 
-## 📖 O que é
+##  O que é
 
-O **Documental** é um template. Isso significa que você não começa do zero: pega um site pronto, troca o conteúdo pelo seu, e publica. Sem instalar programas complicados, sem saber programar.
+A **Documental** é um template. Isso significa que você não começa do zero: pega um site pronto, troca o conteúdo pelo seu, e publica. Sem instalar programas complicados, sem saber programar.
 
 Ele já vem com tudo que um site de narrativa precisa: mapas interativos, linhas do tempo, galerias de imagens, gráficos e textos. Você só precisa colocar o seu conteúdo.
 
@@ -17,7 +17,7 @@ A melhor parte é o **editor visual**. Você edita tudo pelo navegador, vendo o 
 
 ---
 
-## 🚀 Começando em 3 passos
+##  Começando em 3 passos
 
 ### Passo 1 — Usar o template
 
@@ -36,7 +36,7 @@ Tudo acontece sozinho. Quando você salva uma alteração, o GitHub publica o si
 
 ---
 
-## 💻 Para rodar no seu computador (opcional)
+##  Para rodar no seu computador (opcional)
 
 Se quiser trabalhar offline antes de publicar, rode estes comandos no terminal:
 
@@ -51,7 +51,7 @@ Depois abra `http://localhost:4321` no navegador. Precisa ter o [Node.js](https:
 
 ---
 
-## 📁 Onde fica seu conteúdo
+##  Onde fica seu conteúdo
 
 | Pasta | O que vai aqui |
 |-------|---------------|
@@ -64,7 +64,7 @@ Não quer mexer em arquivos? Tudo isso também dá pra fazer pelo editor visual 
 
 ---
 
-## ✏️ Editando pelo CMS
+## ️ Editando pelo CMS
 
 O template já vem com um editor visual embutido, o **Sveltia**. É tipo um WordPress moderno, bem simples de usar.
 
@@ -83,7 +83,7 @@ Em ambos os casos, você não encosta em código.
 
 ---
 
-## 🌐 Deploy automático
+##  Deploy automático
 
 O template traz dois modos de publicação. Escolha um.
 
@@ -101,7 +101,7 @@ O template traz dois modos de publicação. Escolha um.
 
 ---
 
-## 📄 Licença
+##  Licença
 
 **GPL 2.0** — você pode usar, modificar e distribuir livremente. Incluindo uso comercial. Veja o arquivo [LICENSE](LICENSE) para os detalhes completos.
 
