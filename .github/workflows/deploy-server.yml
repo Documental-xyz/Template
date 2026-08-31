@@ -135,6 +135,7 @@ jobs:
       site:          ${{ steps.vars.outputs.site }}
       deploy_target: ${{ steps.vars.outputs.deploy_target }}
       is_main:       ${{ steps.vars.outputs.is_main }}
+      base_path:     ${{ steps.vars.outputs.base_path }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -147,16 +148,22 @@ jobs:
           SITE_URL_PREVIEW:  ${{ secrets.SITE_URL_PREVIEW }}
           DOCROOT_MAIN:      ${{ secrets.DEPLOY_MAIN_DOCROOT_PATH }}
           DOCROOT_PREVIEW:   ${{ secrets.DEPLOY_PREVIEW_DOCROOT_PATH }}
+          PREVIEW_BASE_PATH: ${{ secrets.PREVIEW_BASE_PATH }}
         run: |
           set -euo pipefail
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             echo "site=${SITE_URL_MAIN}"            >> "$GITHUB_OUTPUT"
             echo "deploy_target=${DOCROOT_MAIN}"    >> "$GITHUB_OUTPUT"
             echo "is_main=true"                     >> "$GITHUB_OUTPUT"
+            echo "base_path=/"                      >> "$GITHUB_OUTPUT"
           else
             echo "site=${SITE_URL_PREVIEW}"         >> "$GITHUB_OUTPUT"
             echo "deploy_target=${DOCROOT_PREVIEW}" >> "$GITHUB_OUTPUT"
             echo "is_main=false"                    >> "$GITHUB_OUTPUT"
+            bp="${PREVIEW_BASE_PATH:-/preview}"
+            case "$bp" in /*) ;; *) bp="/$bp"   ;; esac
+            case "$bp" in */) ;; *) bp="$bp/"   ;; esac
+            echo "base_path=$bp"                    >> "$GITHUB_OUTPUT"
           fi
 
       - name: "Setup Node.js"
@@ -170,7 +177,7 @@ jobs:
       - name: "Build (Astro)"
         run: npm run build
         env:
-          BASE_PATH: /
+          BASE_PATH: ${{ steps.vars.outputs.base_path }}
           SITE: ${{ steps.vars.outputs.site }}
 
       - name: "Upload build artifact"
