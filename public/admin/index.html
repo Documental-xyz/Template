@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+
+    <!-- Patch: force showDirectoryPicker with mode readwrite (needed for Sveltia's local-fs backend) -->
+    <script>
+      const _showDirectoryPicker = window.showDirectoryPicker;
+      window.showDirectoryPicker = (options = {}) =>
+        _showDirectoryPicker.call(window, { ...options, mode: 'readwrite' });
+    </script>
+
+    <!-- Seed Sveltia CMS default preferences: closeOnSave = false (keep editor open after save), locale = en-US (pin UI to English) -->
+    <script>
+      (function () {
+        const STORAGE_KEY = 'sveltia-cms.prefs';
+        try {
+          const prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          if (prefs.closeOnSave === undefined) {
+            prefs.closeOnSave = false;
+          }
+          if (prefs.locale === undefined) {
+            // Sveltia ignores the `locale` config option; UI language is stored in prefs.
+            // `en-US` is the canonical English locale (Sveltia migrates bare 'en' to it).
+            prefs.locale = 'en-US';
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+        } catch (e) {
+          // localStorage may be unavailable (private mode, etc.) — silently skip
+        }
+      })();
+    </script>
+
+    <!-- Sveltia CMS — loaded from CDN -->
+    <script src="https://unpkg.com/@sveltia/cms@v0.193.1/dist/sveltia-cms.js" defer></script>
+  </head>
+
+  <body>
+    <!-- Sveltia CMS injects its UI here at runtime -->
+  </body>
+</html>
